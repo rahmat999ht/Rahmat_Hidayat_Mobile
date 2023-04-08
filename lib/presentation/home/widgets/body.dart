@@ -97,15 +97,19 @@ class BodyData extends GetView<HomeController> {
                                 child: Text("PickUp masih kosong"),
                               );
                             }
-                            return CardPickUp(
-                              data: e,
-                              count: controller.listShop[e] ?? 0,
-                              onTapPlus: () {
-                                controller.addListShop(e);
-                              },
-                              onTapMines: () {
-                                controller.deleteListShop(e);
-                              },
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              child: CardPickUp(
+                                data: e,
+                                count: controller.listShop[e] ?? 0,
+                                onTapPlus: () {
+                                  controller.addListShop(e);
+                                },
+                                onTapMines: () {
+                                  controller.deleteListShop(e);
+                                },
+                              ),
                             );
                           }),
                         ],
