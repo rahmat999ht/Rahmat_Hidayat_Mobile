@@ -8,12 +8,24 @@ class FormCustom extends StatelessWidget {
     required this.controller,
     this.onChanged,
     this.readOnly = false,
-  });
+    this.keyboardType,
+  }) : isBorder = false;
+
+  const FormCustom.border({
+    super.key,
+    required this.title,
+    required this.controller,
+    this.onChanged,
+    this.readOnly = false,
+    this.keyboardType,
+  }) : isBorder = true;
 
   final String title;
   final bool readOnly;
   final TextEditingController controller;
   final void Function(String)? onChanged;
+  final bool? isBorder;
+  final TextInputType? keyboardType;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -22,19 +34,31 @@ class FormCustom extends StatelessWidget {
         readOnly: readOnly,
         controller: controller,
         onChanged: onChanged ?? (value) {},
-        textAlign: TextAlign.end,
+        textAlign: isBorder! ? TextAlign.start : TextAlign.end,
         // keyboardType: TextInputType.number,
-        keyboardType: TextInputType.number,
+        keyboardType: keyboardType ?? TextInputType.number,
         inputFormatters: <TextInputFormatter>[
-          FilteringTextInputFormatter.digitsOnly
+          !isBorder!
+              ? FilteringTextInputFormatter.digitsOnly
+              : FilteringTextInputFormatter.singleLineFormatter,
         ],
         decoration: InputDecoration(
           hintText: title,
-          fillColor: readOnly ? Colors.grey[200] : Colors.lightGreen.shade300,
+          fillColor: isBorder!
+              ? Colors.white
+              : readOnly
+                  ? Colors.grey[200]
+                  : Colors.lightGreen.shade300,
           filled: true,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
-            borderSide: BorderSide.none,
+            borderSide: isBorder!
+                ? BorderSide.lerp(
+                    const BorderSide(width: 2),
+                    const BorderSide(width: 2),
+                    0.5,
+                  )
+                : BorderSide.none,
           ),
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 10,

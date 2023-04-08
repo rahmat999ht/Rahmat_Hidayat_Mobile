@@ -9,19 +9,36 @@ import 'package:rahmat_hidayat_mobile_app/infrastructure/navigation/routes.dart'
 import '../../../domain/providers/food_model_provider.dart';
 import '../widgets/alert_details.dart';
 
-class HomeController extends GetxController with StateMixin<List<FoodModel?>> {
+class HomeController extends GetxController with StateMixin<List<FoodModel>> {
   final formKey = GlobalKey<FormState>();
   final TextEditingController? cDiBayar = TextEditingController();
   final cDiKembalikan = TextEditingController();
+  final heigth = 0.00.obs;
+
+  final isSearch = false.obs;
+  final queryC = TextEditingController();
+  var listItems = <FoodModel>[];
 
   final getFoodModel = Get.find<FoodModelProvider>();
-  List<FoodModel?> listFood = [];
+
+  // final listFood = <FoodModel>[].obs;
+  // List<FoodModel>? listFooddata;
+
   final listShop = <FoodModel, int>{}.obs;
 
   final raggableScrollableController = DraggableScrollableController();
 
   final total = 0.obs;
   final charge = 0.obs;
+
+  void addHeigth() {
+    if (heigth.value == 0.00) {
+      heigth.value += 300.00;
+      log(heigth.string, name: "ooo");
+    } else {
+      heigth.value -= 300.00;
+    }
+  }
 
   void addListShop(FoodModel item) {
     if (listShop[item] == null) {
@@ -53,7 +70,7 @@ class HomeController extends GetxController with StateMixin<List<FoodModel?>> {
   void chargeValue(value) {
     final String dibayar = cDiBayar?.text ?? '0';
     int totalHarga = total.value;
-    int diBayar = int.parse(dibayar);
+    int diBayar = int.tryParse(dibayar) ?? 0;
     int kembali = diBayar - totalHarga;
     String diKembalikan = kembali.toString();
     cDiKembalikan.text = diKembalikan;
@@ -73,44 +90,50 @@ class HomeController extends GetxController with StateMixin<List<FoodModel?>> {
     );
   }
 
-  Future alertDetail() async {
+  Future showAlertDetail() async {
     await Get.dialog(
-      const AlertDitails(),
+      alertDitails(),
       barrierColor: Colors.black.withOpacity(0.8),
+    );
+  }
+
+  void onChange(String value) {
+    value.isEmpty ? isSearch.value = false : isSearch.value = true;
+
+    change(
+      value.isEmpty
+          ? listItems
+          : listItems
+              .where((element) => element.name!.toLowerCase().contains(
+                    value.toLowerCase(),
+                  ))
+              .toList(),
+      status: RxStatus.success(),
     );
   }
 
   @override
   void onInit() async {
     await getFoop();
+    // await listData();
     streamDataTotal();
-    // charge();
     super.onInit();
   }
 
-  Future listData() async {
-    FoodModel? data;
-    for (int i = 1; i <= 5; i += 2) {
-      log(i.toString(), name: "lll");
-      data = await getFoodModel.getFoodModelById(i);
-      listFood.add(data);
-      log("Data for : $listFood", name: "lll");
-    }
-    return listFood;
-  }
-
   Future getFoop() async {
-    final data = getFoodModel.getFoodModel().then(
+    final dataInit = getFoodModel.getFoodModel().then(
       (value) {
         if (value.status.hasError) {
           change(null, status: RxStatus.error(value.statusText));
           log("Status = ${value.statusText.toString()}", name: "kkk");
         } else {
-          change(value.body, status: RxStatus.success());
+          listItems = value.body;
+          listItems.sort((a, b) => a.name!.compareTo(b.name!));
+          change(listItems, status: RxStatus.success());
           log(value.body.toString(), name: "kkk");
         }
       },
     );
-    return await data;
+    return await dataInit;
   }
 }

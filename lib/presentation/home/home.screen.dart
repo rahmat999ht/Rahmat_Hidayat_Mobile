@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import 'controllers/home.controller.dart';
 import 'widgets/body.dart';
+import 'widgets/form_search.dart';
 
 class HomeScreen extends GetView<HomeController> {
   const HomeScreen({Key? key}) : super(key: key);
@@ -10,7 +11,9 @@ class HomeScreen extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('HomeScreen'),
+        title: FormSearch(
+          onChanged: (value) => controller.onChange(value),
+        ),
         centerTitle: true,
       ),
       body: controller.obx(

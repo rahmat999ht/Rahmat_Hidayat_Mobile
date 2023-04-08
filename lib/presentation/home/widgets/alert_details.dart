@@ -6,50 +6,46 @@ import '../../../domain/core/interfaces/cards/card_pick_up.dart';
 import '../../../domain/core/interfaces/form/form.dart';
 import 'details_value.dart';
 
-class AlertDitails extends GetView<HomeController> {
-  const AlertDitails({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: AlertDialog(
-        actionsAlignment: MainAxisAlignment.end,
-        icon: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
+Widget alertDitails() {
+  final controller = Get.find<HomeController>();
+  return SafeArea(
+    child: AlertDialog(
+      actionsAlignment: MainAxisAlignment.end,
+      icon: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          InkWell(
+            onTap: Get.back,
+            child: const Padding(
+              padding: EdgeInsets.only(top: 8, right: 8),
+              child: Icon(Icons.close),
+            ),
+          ),
+        ],
+      ),
+      iconColor: Colors.black38,
+      iconPadding: const EdgeInsets.all(0),
+      title: Center(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            InkWell(
-              onTap: Get.back,
-              child: const Padding(
-                padding: EdgeInsets.only(top: 8, right: 8),
-                child: Icon(Icons.close),
+            Icon(
+              Icons.food_bank_outlined,
+              color: Colors.blue[600],
+            ),
+            Text(
+              "Detail Pesanan",
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                color: Colors.blue[600],
               ),
             ),
           ],
         ),
-        iconColor: Colors.black38,
-        iconPadding: const EdgeInsets.all(0),
-        title: Center(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.food_bank_outlined,
-                color: Colors.blue[600],
-              ),
-              Text(
-                "Detail Pesanan",
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: Colors.blue[600],
-                ),
-              ),
-            ],
-          ),
-        ),
-        content: Form(
-          key: controller.formKey,
+      ),
+      content: Form(
+        key: controller.formKey,
+        child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -118,6 +114,6 @@ class AlertDitails extends GetView<HomeController> {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
 }

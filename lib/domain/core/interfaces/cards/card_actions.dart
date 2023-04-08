@@ -50,7 +50,7 @@ class CardActions extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 8, right: 8, left: 8),
+              padding: const EdgeInsets.only(top: 2, right: 8, left: 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -60,7 +60,7 @@ class CardActions extends StatelessWidget {
                       fontSize: 16,
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 8),
                   RichText(
                     text: TextSpan(
                       text: 'Rp. $price ',

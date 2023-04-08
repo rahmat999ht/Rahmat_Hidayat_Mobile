@@ -10,8 +10,8 @@ class TapDraggableScrollableSheet extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      // onTap: controller.childSize,
+    return InkWell(
+      onTap: controller.addHeigth,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

@@ -18,6 +18,7 @@ class BodyData extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Stack(
+      alignment: AlignmentDirectional.bottomStart,
       children: [
         SizedBox.expand(
           child: Padding(
@@ -49,25 +50,24 @@ class BodyData extends GetView<HomeController> {
                       },
                     ),
                   ),
-                  const SizedBox(height: 70),
+                  const SizedBox(height: 80),
                 ],
               ),
             ),
           ),
         ),
-        _buildDraggableScrollableSheet(),
+        animationBottom(),
       ],
     );
   }
 
-  DraggableScrollableSheet _buildDraggableScrollableSheet() {
-    return DraggableScrollableSheet(
-      controller: controller.raggableScrollableController,
-      initialChildSize: 0.11,
-      minChildSize: 0.11,
-      maxChildSize: 0.8,
-      builder: (BuildContext context, ScrollController scrollController) {
-        return Container(
+  Widget animationBottom() {
+    return Obx(
+      () => AnimatedContainer(
+        duration: const Duration(seconds: 2),
+        height: 85.00 + controller.heigth.value,
+        width: Get.width,
+        child: Container(
           decoration: const BoxDecoration(
             color: Colors.white,
             // border: Border.all(color: Colors.blue, width: 2),
@@ -77,44 +77,47 @@ class BodyData extends GetView<HomeController> {
             ),
           ),
           child: Scrollbar(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: SingleChildScrollView(
-                controller: scrollController,
-                child: Obx(
-                  () => Column(
-                    children: [
-                      const TapDraggableScrollableSheet(),
-                      TotalBelanja(
-                        totalHarga: controller.total.value,
-                        onTapCharge: controller.alertDetail,
-                      ),
-                      const SizedBox(height: 10),
-                      ...controller.listShop.keys.map((e) {
-                        if (controller.listShop.isEmpty) {
-                          return const Center(
-                            child: Text("PickUp masih kosong"),
-                          );
-                        }
-                        return CardPickUp(
-                          data: e,
-                          count: controller.listShop[e] ?? 0,
-                          onTapPlus: () {
-                            controller.addListShop(e);
-                          },
-                          onTapMines: () {
-                            controller.deleteListShop(e);
-                          },
-                        );
-                      }),
-                    ],
+            child: Obx(
+              () => Column(
+                children: [
+                  const TapDraggableScrollableSheet(),
+                  TotalBelanja(
+                    totalHarga: controller.total.value,
+                    onTapCharge: controller.showAlertDetail,
                   ),
-                ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      physics: const ScrollPhysics(),
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 10),
+                          ...controller.listShop.keys.map((e) {
+                            if (controller.listShop.isEmpty) {
+                              return const Center(
+                                child: Text("PickUp masih kosong"),
+                              );
+                            }
+                            return CardPickUp(
+                              data: e,
+                              count: controller.listShop[e] ?? 0,
+                              onTapPlus: () {
+                                controller.addListShop(e);
+                              },
+                              onTapMines: () {
+                                controller.deleteListShop(e);
+                              },
+                            );
+                          }),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

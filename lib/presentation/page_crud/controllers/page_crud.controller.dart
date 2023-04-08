@@ -62,6 +62,7 @@ class PageCrudController extends GetxController
         }
       },
     );
+
     return await data;
   }
 }
